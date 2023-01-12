@@ -2,7 +2,7 @@ import cfg
 import dev
 import pbs
 import voa
-import qsk
+import psk
 import tip
 
 yqpsk = cfg.ch * 2
@@ -39,8 +39,8 @@ def chip(x, y, lchip):
   x9, _ = dev.sline(x6, y71, x7 - x6)
   x9, _ = dev.sline(x6, y74, x7 - x6)
 
-  x10, _ = qsk.device(x9, y + yqpsk)
-  x10, _ = qsk.device(x9, y - yqpsk)
+  x10, _ = psk.device(x9, y + yqpsk)
+  x10, _ = psk.device(x9, y - yqpsk)
 
   x11, x12, ltip = dev.center(idev, x, x10, lchip)
 

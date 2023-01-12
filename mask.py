@@ -4,17 +4,16 @@ import dev
 import key
 import ohm
 import pbs
-import qsk
+import psk
 import tip
 import ssc
 import tap
 import icr
 import dci
-import qdc
 import voa
-import q2x2
 import y1x2
 import y2x2
+import psk2x2
 
 # key.frame(layer, quadrant, key position)
 # 'recs' layer : stress released patterns
@@ -43,10 +42,9 @@ def optical_hybrid(x, y):
 
   _, y1 = tip.chip(x, y + cfg.sch, cfg.size, 0.36)
   _, y1 = y2x2.chip(x, y1 + cfg.sch * 1.5, cfg.size)
-  _, y1 = q2x2.chip(x, y1 + cfg.sch * 0.5 + cfg.ch, cfg.size)
-  _, y1 = qdc.chip(x, y1 + cfg.ch, cfg.size)
-  _, y1 = qsk.chips(x, y1 + cfg.ch, dev.arange(84, 96, 3))
-  _, y1 = q2x2.chip(x, y1 + cfg.ch, cfg.size)
+  _, y1 = psk2x2.chip(x, y1 + cfg.sch * 0.5 + cfg.ch, cfg.size)
+  _, y1 = psk.chips(x, y1 + cfg.ch, dev.arange(84, 96, 3))
+  _, y1 = psk2x2.chip(x, y1 + cfg.ch, cfg.size)
   _, y1 = voa.chips(x, y1 + cfg.ch * 2.5, dev.arange(200, 500, 100))
   _, y1 = y2x2.chip(x, y1 + cfg.ch * 3, cfg.size)
   _, y1 = tip.chip(x, y + cfg.size - cfg.sch, cfg.size, 0.36)

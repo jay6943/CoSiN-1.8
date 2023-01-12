@@ -3,7 +3,7 @@ import dxf
 import dev
 import pbs
 import voa
-import qsk
+import psk
 import tip
 import tap
 import elr
@@ -131,8 +131,8 @@ def chip(x, y, lchip):
 
   idev = len(cfg.data)
 
-  x12, _ = qsk.device(x, y + yqpsk)
-  x12, _ = qsk.device(x, y - yqpsk)
+  x12, _ = psk.device(x, y + yqpsk)
+  x12, _ = psk.device(x, y - yqpsk)
 
   for i in [-3,-1,1,3]:
     x15, y1 = dev.taper(x12, y + i * ch + yqpsk, cfg.ltpr, cfg.wr, cfg.wg)
