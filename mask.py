@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
   key.cross(0, 0)
 
-  ok = 2
+  ok = 0
   
   if ok == 0 or ok == 1: components(x - cfg.mask, y)
   if ok == 0 or ok == 2: optical_hybrid(x, y)
