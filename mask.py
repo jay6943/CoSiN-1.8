@@ -1,4 +1,5 @@
 import cfg
+import dxf
 import dev
 import key
 import ohm
@@ -20,7 +21,7 @@ import y2x2
 # 'fill' layer : filled with soild
 # 'none' layer : not filled
 
-def mask_components(x, y):
+def components(x, y):
 
   key.frame(x, y, 1, 'fill')
 
@@ -36,7 +37,7 @@ def mask_components(x, y):
 
   tip.scuts(x, y)
 
-def mask_hybrid(x, y):
+def optical_hybrid(x, y):
 
   key.frame(x, y, 1, 'fill')
 
@@ -50,9 +51,10 @@ def mask_hybrid(x, y):
   _, y1 = y2x2.chip(x, y1 + cfg.ch * 3, cfg.size)
   _, y1 = tip.chip(x, y + cfg.size - cfg.sch, cfg.size, 0.36)
   
+  dxf.seperation('gold', 0, -cfg.mask)
   tip.scuts(x, y)
 
-def mask_pbs(x, y):
+def polarization_splitter(x, y):
 
   key.frame(x, y, 1, 'fill')
 
@@ -62,7 +64,7 @@ def mask_pbs(x, y):
 
   tip.scuts(x, y)
 
-def mask_4_icr(x, y):
+def coherent_receiver(x, y):
 
   key.frame(x, y, 1, 'fill')
 
@@ -70,7 +72,7 @@ def mask_4_icr(x, y):
 
   tip.scuts(x, y)
 
-def mask_key(x, y):
+def align_key(x, y):
 
   key.frame(x, y, 1, 'none')
 
@@ -85,12 +87,12 @@ if __name__ == '__main__':
 
   key.cross(0, 0)
 
-  ok = 0
+  ok = 2
   
-  if ok == 0 or ok == 1: mask_components(x - cfg.mask, y)
-  if ok == 0 or ok == 2: mask_hybrid(x, y)
-  if ok == 0 or ok == 3: mask_pbs(x - cfg.mask, y - cfg.mask)
-  if ok == 0 or ok == 4: mask_key(x, y - cfg.mask)
-
+  if ok == 0 or ok == 1: components(x - cfg.mask, y)
+  if ok == 0 or ok == 2: optical_hybrid(x, y)
+  if ok == 0 or ok == 3: polarization_splitter(x - cfg.mask, y - cfg.mask)
+  if ok == 0 or ok == 4: align_key(x, y - cfg.mask)
+  
   dev.saveas(cfg.work + cfg.draft)
   dev.removes('__pycache__/')

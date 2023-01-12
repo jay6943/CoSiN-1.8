@@ -1,5 +1,5 @@
-work = '../mask/SiN-1.7/'
-libs = '../mask/SiN-1.7/lib/'
+work = '../mask/SiN-1.8/'
+libs = '../mask/SiN-1.8/lib/'
 
 data = []
 
@@ -34,19 +34,3 @@ tapping = 2.6
 size = 10000
 mask = 10900
 area = [[0, 0], [-1, 0], [0, 0], [-1, -1], [0, -1]]
-
-layer = {}
-layer['core'] = 0
-layer['clad'] = 0
-layer['edge'] = 0
-layer['slab'] = 0
-layer['sio2'] = 0
-layer['fill'] = 0
-layer['gold'] = 0
-layer['cros'] = 0
-layer['keys'] = 0
-layer['bars'] = 0
-layer['hole'] = 0
-layer['recs'] = 0
-layer['text'] = 0
-layer['cuts'] = 0

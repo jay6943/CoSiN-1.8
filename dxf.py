@@ -62,6 +62,13 @@ def conversion(fp):
 
   cfg.data.clear()
 
+def seperation(layer, dx, dy):
+
+  for i in range(len(cfg.data)):
+    if layer == cfg.data[i][0]:
+      data = np.array(cfg.data[i][1:]) + np.array([dx, dy])
+      cfg.data[i][1:] = data.tolist()
+
 def rmatrix(rotate):
   
   arg = rotate * np.pi / 180

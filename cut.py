@@ -6,12 +6,8 @@ import mask
 import numpy as np
 
 radius = 150 * 0.5 * 1000
-wbar = 400
-size = wbar + cfg.size
+size = key.wkey + cfg.size
 rmax = radius + 5000
-wcut = 1
-
-fontsize = 25
 
 def wafer(x, y):
   
@@ -30,37 +26,36 @@ def wafer(x, y):
   dxf.crect('fill', x + rmax, y - rmax, rmax - t, t - rmax)
   dxf.crect('fill', x + rmax, y + rmax, rmax - t, rmax - t)
 
-def cells(x, y, n, title, fp):
+def cells(x, y, n, title):
 
   cs = cfg.size * 0.5
-  dx, dy = 400, 400 + cs
+  dy = cs + key.wkey
 
   for i in range(n):
-    xp = x + size * (i - n * 0.5)
-    key.bars(xp, y)
-    if i == 3: mask.mask_4_key(fp)
-    else: dxf.srect('recs', xp + dx, y + dy, cfg.size, cfg.size)
-    dxf.texts('text', xp + cs, y + cs, title, 40, 'cc')
+    dx = size * (i - n * 0.5) + 200
+    key.bars(x + dx - key.wkey, y)
+    dxf.srect('recs', x + dx, y + dy, cfg.size, cfg.size)
+    dxf.texts('text', x + dx + cs, y + cs, title, 40, 'cc')
 
 def tooling(x, y):
 
   fp = cfg.work + 'wafer'
 
   for i in range(11):
-    dy, n = size * (i - 5.5), 10 if i % 10 else 8
-    cells(x, y + dy, n, '0' + str(i % 4 + 1), fp)
+    j = i % 4 + 1
+    n = 10 if i % 10 else 8
+    dx = size * (i - 5)
+    dy = dx - size * 0.5
+
+    if j != 4: cells(x, y + dy, n, '0' + str(i % 4 + 1))
+    else: mask.align_key(x + key.wkey, y + dy + key.wkey)
+    
+    dxf.srect('cuts', x + dx, y, 10, rmax * 2)
   
-  a = cfg.size * 6
-  b = cfg.size * 2
-
-  dxf.crect('cuts', x - rmax, y + a, rmax, wcut + a)
-  dxf.crect('cuts', x - rmax, y + b, rmax, wcut + b)
-  dxf.crect('cuts', x - rmax, y - b, rmax, wcut - b)
-  dxf.crect('cuts', x - rmax, y - a, rmax, wcut - a)
-
-  for i in range(11):
-    xp = (i - 5) * size + x
-    dxf.srect('cuts', xp + wbar - 200, y, wcut, rmax * 2)
+  dxf.srect('cuts', x - rmax, y + size * 6, rmax * 2, 10)
+  dxf.srect('cuts', x - rmax, y + size * 2, rmax * 2, 10)
+  dxf.srect('cuts', x - rmax, y - size * 2, rmax * 2, 10)
+  dxf.srect('cuts', x - rmax, y - size * 6, rmax * 2, 10)
 
   wafer(0, 0)
 
