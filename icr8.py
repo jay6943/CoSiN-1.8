@@ -19,25 +19,15 @@ def chip(x, y, lchip):
   x4, y41, y42 = pbs.device(x3, y1)
   x4, y43, y44 = pbs.device(x3, y2)
 
-  x5, y51 = dev.taper(x4, y41, cfg.ltpr, cfg.wg, cfg.wr)
-  x5, y52 = dev.taper(x4, y42, cfg.ltpr, cfg.wg, cfg.wr)
-  x5, y53 = dev.taper(x4, y43, cfg.ltpr, cfg.wg, cfg.wr)
-  x5, y54 = dev.taper(x4, y44, cfg.ltpr, cfg.wg, cfg.wr)
-
   h = [y + ch * (i * 2 - 7) for i in range(8)]
 
-  x1, y71 = dev.sbend(x5, y51, 45, h[6] - y51)
-  x1, y74 = dev.sbend(x5, y54, 45, h[1] - y54)
-  x2, y72 = dev.sbend(x5, y52, 45, h[2] - y52)
-  x2, y73 = dev.sbend(x5, y53, 45, h[5] - y53)
+  x1, y71 = dev.sbend(x4, y41, 45, h[6] - y41)
+  x1, y74 = dev.sbend(x4, y44, 45, h[1] - y44)
+  x2, y72 = dev.sbend(x4, y42, 45, h[2] - y42)
+  x2, y73 = dev.sbend(x4, y43, 45, h[5] - y43)
 
-  x6, y71 = dev.taper(x1, y71, cfg.ltpr, cfg.wr, cfg.wg)
-  x6, y74 = dev.taper(x1, y74, cfg.ltpr, cfg.wr, cfg.wg)
-  x7, y72 = dev.taper(x2, y72, cfg.ltpr, cfg.wr, cfg.wg)
-  x7, y73 = dev.taper(x2, y73, cfg.ltpr, cfg.wr, cfg.wg)
-
-  x9, _ = dev.sline(x6, y71, x7 - x6)
-  x9, _ = dev.sline(x6, y74, x7 - x6)
+  x9, _ = dev.sline(x1, y71, x2 - x1)
+  x9, _ = dev.sline(x1, y74, x2 - x1)
 
   x10, _ = psk.device(x9, y + yqpsk)
   x10, _ = psk.device(x9, y - yqpsk)

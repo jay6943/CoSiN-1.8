@@ -49,7 +49,7 @@ def taper(x, y, length, wstart, wstop):
 
 def bends(x, y, angle, rotate, xsign, ysign):
 
-  core = elr.update(cfg.wr, cfg.radius, angle)
+  core = elr.update(cfg.wg, cfg.radius, angle)
   edge = elr.update(cfg.eg, cfg.radius, angle)
   sio2 = elr.update(cfg.sg, cfg.radius, angle)
 
@@ -61,7 +61,7 @@ def bends(x, y, angle, rotate, xsign, ysign):
 
 def sbend(x, y, angle, dy):
 
-  core = elr.update(cfg.wr, cfg.radius, angle)
+  core = elr.update(cfg.wg, cfg.radius, angle)
   edge = elr.update(cfg.eg, cfg.radius, angle)
   sio2 = elr.update(cfg.sg, cfg.radius, angle)
 
@@ -73,30 +73,31 @@ def sbend(x, y, angle, dy):
 
 def texts(x, y, title, scale, align):
 
-  d = 10 * scale * 2 # 10 when scale = 0.5
+  d = 10 * scale * 2  # 10 when scale = 0.5
 
   if align[0] == 'l': x = x + d
   if align[0] == 'r': x = x - d
 
   l, w = dxf.texts('core', x, y, title, scale, align)
 
+  xalign = x - l * 0.5 - d
+
   if align[0] == 'l': xalign = x - d
-  if align[0] == 'c': xalign = x - l * 0.5 - d
   if align[0] == 'r': xalign = x - l - d
 
   dxf.srect('edge', xalign, y, l + d * 2, w + d * 2)
 
 def arange(start, stop, step):
 
-  vars, var = [], start
+  addvar, var = [], start
 
-  while(var < stop + step * 0.5):
-    vars.append(var)
+  while var < stop + step * 0.5:
+    addvar.append(var)
     var = var + step
-  
-  if len(vars) < 1: print('No any element')
 
-  return vars
+  if len(addvar) < 1: print('No any element')
+
+  return addvar
 
 def center(idev, x, xt, lchip):
 
@@ -110,12 +111,12 @@ def center(idev, x, xt, lchip):
 def removes(folder):
 
   if os.path.isdir(folder):
-    
+
     files = os.listdir(folder)
-    
+
     for fp in files:
       if os.path.exists(folder + fp): os.remove(folder + fp)
-    
+
     os.rmdir(folder)
 
 def saveas(filename):
@@ -123,8 +124,6 @@ def saveas(filename):
   fp = dxf.start(filename)
   dxf.conversion(fp)
   dxf.close(fp)
-
-  removes('__pycache__/')
 
 if __name__ == '__main__':
 

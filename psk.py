@@ -40,10 +40,10 @@ def device(x, y):
   dxf.tilts('core', xh, ya, cfg.eg * 2, cfg.wg, -45)
   dxf.tilts('core', xh, yb, cfg.eg * 2, cfg.wg,  45)
 
-  x5, _ = dev.srect(x3, y1, l - h * 2, cfg.wr)
-  x6, _ = dev.srect(x4, y2, l, cfg.wr)
-  x6, _ = dev.srect(x4, y3, l, cfg.wr)
-  x6, _ = dev.srect(x4, y4, l, cfg.wr)
+  x5, _ = dev.srect(x3, y1, l - h * 2, cfg.wg)
+  x6, _ = dev.srect(x4, y2, l, cfg.wg)
+  x6, _ = dev.srect(x4, y3, l, cfg.wg)
+  x6, _ = dev.srect(x4, y4, l, cfg.wg)
 
   x7, _ = dev.sbend(x5, y1, 45, -ph2x2)
   x7, _ = dev.sbend(x6, y2, 45, -ch2x2)
@@ -58,10 +58,7 @@ def device(x, y):
   x9, _ = dev.sbend(x8, y41, 45,  ch2x2)
   x9, _ = dev.sbend(x8, y42, 45, -ch2x2)
 
-  for i in [y + cfg.ch * (i - 1.5) for i in range(4)]:
-    x10, _ = dev.taper(x9, i, cfg.ltpr, cfg.wr, cfg.wg)
-
-  return x10, y
+  return x9, y
 
 def chip(x, y, lchip):
 
@@ -77,8 +74,8 @@ def chip(x, y, lchip):
   for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
   s = 'iq-' + str(round(cfg.phase))
-  dev.texts(t1, y, s, 0.2, 'lc')
-  dev.texts(t2, y, s, 0.2, 'rc')
+  dev.texts(t1, y, s, 0.4, 'lc')
+  dev.texts(t2, y, s, 0.4, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
   
   return x + lchip, y

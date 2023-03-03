@@ -13,22 +13,6 @@ yqpsk = 1800
 xback = 1500
 yhigh = 900
 
-def sbend(x, y, angle, dy):
-
-  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
-  x2, y2 = dev.sbend(x1, y1, angle, dy)
-  x3, y3 = dev.taper(x2, y2, cfg.ltpr, cfg.wr, cfg.wg)
-
-  return x3, y3
-
-def tapertilt(x, y, length, wstart, wstop):
-  
-  idev = len(cfg.data)
-  x1, y1 = dev.taper(x, y, length, wstart, wstop)
-  x2, y2 = dxf.move(idev, x, y, x1, y1, 0, 0, 90)
-  
-  return x2, y2
-
 def tbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
@@ -42,7 +26,7 @@ def tbend(x, y, dy, xsign):
   yo = df['dx'] if xsign > 0 else df['dy']
 
   x1, y1 = dev.bends(x, y, 45, a1, xsign, ysign)
-  x2, y2 = dev.tilts(x1, y1, dl, cfg.wr, 45 * ysign)
+  x2, y2 = dev.tilts(x1, y1, dl, cfg.wg, 45 * ysign)
   
   x3, y3 = x2 + xo, y2 + yo * ysign
   x4, y4 = dev.bends(x3, y3, 45, a2, xsign, -ysign)
@@ -57,7 +41,7 @@ def cbend(x, y, dy, xsign):
   dl = dy * ysign - df['dx'] - df['dy']
 
   x1, y1 = dev.bends(x, y, 90, 0, xsign, ysign)
-  x2, y2 = dev.tilts(x1, y1, dl, cfg.wr, 90 * ysign)
+  x2, y2 = dev.tilts(x1, y1, dl, cfg.wg, 90 * ysign)
   x3, y3 = x2 - df['dx'] * xsign, y2 + df['dy'] * ysign
   x4, y4 = dev.bends(x3, y3, 90, 0, xsign, -ysign)
 
@@ -65,32 +49,28 @@ def cbend(x, y, dy, xsign):
 
 def inbend(x, y, ystart, sign):
 
-  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
-  x1, y1 = tbend(x1, y1, 215 * sign, 1)
-  x2, y2 = dev.tilts(x1, y1, yhigh + 50, cfg.wr, 90 * sign)
+  x1, y1 = tbend(x, y, 215 * sign, 1)
+  x2, y2 = dev.tilts(x1, y1, yhigh + 50, cfg.wg, 90 * sign)
   x3, y3 = dev.bends(x2, y2, 90, 90, 1, sign)
-  x6, y4 = dev.srect(x3, y3, -xback, cfg.wr)
+  x6, y4 = dev.srect(x3, y3, -xback, cfg.wg)
   h = sign * (yqpsk - cfg.ch * 0.5) + ystart - y4
   x5, y5 = cbend(x6, y4, h, -1)
-  x7, y7 = dev.taper(x5, y5, cfg.ltpr, cfg.wr, cfg.wg)
 
-  return x7, y7
+  return x5, y5
 
 def outbend(x, y, ystart, sign):
 
-  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
-  x1, y1 = cbend(x1, y1, sign * yhigh, 1)
-  x2, y2 = dev.srect(x1, y1, -xback, cfg.wr)
+  x1, y1 = cbend(x, y, sign * yhigh, 1)
+  x2, y2 = dev.srect(x1, y1, -xback, cfg.wg)
   h = sign * (yqpsk + cfg.ch * 0.5) + ystart - y2
   x3, y3 = cbend(x2, y2, h, -1)
-  x7, y7 = dev.taper(x3, y3, cfg.ltpr, cfg.wr, cfg.wg)
 
-  return x7, y7
+  return x3, y3
 
 def fiber_pd(x, y, lchip):
 
   x1, _, _ = tip.fiber(x, y, lchip * 0.5, -1)
-  x2, _, _ = tip.pd(x1, y, lchip * 0.5, 1)
+  x2, _, _ = tip.diode(x1, y, lchip * 0.5, 1)
 
   return x2, y
 
@@ -111,14 +91,14 @@ def chip(x, y, lchip):
   x3, _, _ = tap.device(x2, y1)
   x3, _ = dev.sline(x2, y2, x3 - x2)
 
-  x4, y3 = sbend(x3, y1, 90,  300)
-  x4, y4 = sbend(x3, y2, 90, -300)
+  x4, y3 = dev.sbend(x3, y1, 90,  300)
+  x4, y4 = dev.sbend(x3, y2, 90, -300)
 
   x6, _ = voa.device(x4, y3)
   x6, _ = dev.sline(x4, y4, x6 - x4)
 
-  x8, y5 = sbend(x6, y3, 90, -300)
-  x8, y6 = sbend(x6, y4, 90,  300)
+  x8, y5 = dev.sbend(x6, y3, 90, -300)
+  x8, y6 = dev.sbend(x6, y4, 90,  300)
 
   x9, y61, y62 = pbs.device(x8, y5)
   x9, y63, y64 = pbs.device(x8, y6)
@@ -135,10 +115,8 @@ def chip(x, y, lchip):
   x12, _ = psk.device(x, y - yqpsk)
 
   for i in [-3,-1,1,3]:
-    x15, y1 = dev.taper(x12, y + i * ch + yqpsk, cfg.ltpr, cfg.wr, cfg.wg)
-    x15, y2 = dev.taper(x12, y + i * ch - yqpsk, cfg.ltpr, cfg.wr, cfg.wg)
-    x13, y1 = tip.diode(x15, y1, 0, 1)
-    x13, y2 = tip.diode(x15, y2, 0, 1)
+    x13, y1 = tip.diode(x12, y + i * ch + yqpsk, 0, 1)
+    x13, y2 = tip.diode(x12, y + i * ch - yqpsk, 0, 1)
 
   x14, _ = dxf.move(idev, x, 0, x13, 0, lchip - x13 + x, 0, 0)
 

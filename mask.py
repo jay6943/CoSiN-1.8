@@ -9,7 +9,6 @@ import tip
 import ssc
 import tap
 import icr
-import dci
 import voa
 import y1x2
 import y2x2
@@ -28,13 +27,10 @@ def components(x, y):
   _, y1 = ohm.chips(x, y + cfg.sch * 2)
   _, y1 = y1x2.chips(x, y1 + cfg.sch * 3, dev.arange(16, 18, 1))
   _, y1 = y2x2.chips(x, y1 + cfg.sch * 1.5, dev.arange(48, 52, 0.5))
-  _, y1 = dci.chips(x, y1 + cfg.sch, dev.arange(0.86, 0.92, 0.01))
   _, y1 = tip.chips(x, y1 + cfg.sch, dev.arange(0.2, 0.4, 0.02))
   _, y1 = ssc.chips(x, y1 + cfg.sch, dev.arange(500, 900, 50))
   _, y1 = tap.chips(x, y1 + cfg.sch, dev.arange(2.2, 2.8, 0.2))
   _, y1 = tip.chip(x, y + cfg.size - cfg.sch, cfg.size, 0.36)
-
-  tip.scuts(x, y)
 
 def optical_hybrid(x, y):
 
@@ -50,7 +46,6 @@ def optical_hybrid(x, y):
   _, y1 = tip.chip(x, y + cfg.size - cfg.sch, cfg.size, 0.36)
   
   dxf.seperation('gold', 0, -cfg.mask)
-  tip.scuts(x, y)
 
 def polarization_splitter(x, y):
 
@@ -60,15 +55,11 @@ def polarization_splitter(x, y):
   _, y1 = pbs.chips(x, y1 + cfg.sch, dev.arange(10, 50, 2))
   _, y1 = tip.chip(x, y + cfg.size - cfg.sch, cfg.size, 0.36)
 
-  tip.scuts(x, y)
-
 def coherent_receiver(x, y):
 
   key.frame(x, y, 1, 'fill')
 
   icr.chips(x, y + cfg.size * 0.5)
-
-  tip.scuts(x, y)
 
 def align_key(x, y):
 
@@ -93,4 +84,3 @@ if __name__ == '__main__':
   if ok == 0 or ok == 4: align_key(x, y - cfg.mask)
   
   dev.saveas(cfg.work + cfg.draft)
-  dev.removes('__pycache__/')

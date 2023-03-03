@@ -217,7 +217,7 @@ def contact_align_keys(layer, x, y, sign):
     
     dxf.move(idev, xo, yo, 0, 0, 0, 0, 90 * i)
   
-  dxf.srect(layer, x, yo, cfg.size, 5)
+  dxf.srect(layer, x, yo - 1000, cfg.size, 5)
 
   print('Contact Align Keys')
 

@@ -109,9 +109,9 @@ def chip(x, y, lchip):
   x8, t2 = tip.fiber(x6, y - ch, ltip, 1)
 
   s = 'pbs-' + str(round(cfg.l2x2)) + '-' + str(round(cfg.lpbs))
-  dev.texts(t1, y - ch, s, 0.2, 'lc')
-  dev.texts(t1, y + ch, s, 0.2, 'lc')
-  dev.texts(t2, y, s, 0.2, 'rc')
+  dev.texts(t1, y - ch, s, 0.4, 'lc')
+  dev.texts(t1, y + ch, s, 0.4, 'lc')
+  dev.texts(t2, y, s, 0.4, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y
