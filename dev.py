@@ -78,7 +78,7 @@ def texts(x, y, title, scale, align):
   if align[0] == 'l': x = x + d
   if align[0] == 'r': x = x - d
 
-  l, w = dxf.texts('core', x, y, title, scale, align)
+  l, w = dxf.texts('core', x, y, title.lower(), scale, align)
 
   xalign = x - l * 0.5 - d
 

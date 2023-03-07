@@ -9,12 +9,14 @@ def device(x, y, ltip, ltaper, sign):
   l = [ltip - tip.polished, 50, ltaper]
   t = l[0] - sum(l[1:])
 
+  sch = cfg.sch - 10
+
   if t > 0: x, _ = dev.sline(x, y, t * sign)
   x1, _ = dxf.taper('core', x,  y, sign * l[1], w[0], w[1])
-  x1, _ = dxf.taper('edge', x, y, sign * l[1], cfg.eg, cfg.sch)
+  x1, _ = dxf.taper('edge', x, y, sign * l[1], cfg.eg, sch)
   x2, _ = dxf.taper('core', x1, y, sign * l[2], w[1], w[2])
   x3, _ = dxf.srect('core', x2, y, sign * tip.polished, w[2])
-  x3, _ = dxf.srect('edge', x1, y, x3 - x1, cfg.sch)
+  x3, _ = dxf.srect('edge', x1, y, x3 - x1, sch)
 
   dxf.srect('sio2', x, y, x2 - x, cfg.sg)
 
@@ -29,7 +31,7 @@ def chip(x, y, lchip, ltaper):
   x4, t1 = device(x2, y, ltip, ltaper, -1)
   x5, t2 = device(x3, y, ltip, ltaper,  1)
 
-  s = 'sio-' + str(round(ltaper))
+  s = 'SiO-' + str(round(ltaper))
   dev.texts(t1, y - 50, s, 0.4, 'lc')
   dev.texts(t2, y - 50, s, 0.4, 'rc')
   print(s, round(x3 - x2), round(x5 - x4))

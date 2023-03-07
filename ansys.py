@@ -45,7 +45,7 @@ def sbend(folder):
 
   cfg.draft = 'mask'
 
-  wg, radius, angle, dy = 1.2, 10, 25, 1
+  wg, radius, angle, dy = cfg.wg, 10, 25, 4
 
   df = elr.update(wg, radius, angle)
 
@@ -55,14 +55,31 @@ def sbend(folder):
   dxf.sbend('core', 0, 0, df, angle, dy)
   dev.saveas(folder + str(wg) + '-2')
 
+def sbend_in_out(folder):
+
+  cfg.draft = 'mask'
+
+  angle, dy = 5, 4
+
+  df = elr.update(cfg.wg, cfg.radius, angle)
+
+  x1, y1 = 0, -dy
+  x2, y2 = dxf.sline('core', x1, y1, 10)
+  x3, y3 = dxf.sbend('core', x2, y2, df, angle,  dy)
+  x4, y4 = dxf.sbend('core', x3, y3, df, angle, -dy)
+  x5, y5 = dxf.sline('core', x4, y4, 10)
+  dev.saveas(folder + 'sbend')
+
+  return x5, y5
+
 def dc(folder):
 
   cfg.draft = 'mask'
 
-  radius, angle, dy = 50, 3, 1
+  radius, angle, dy = cfg.radius, 3, 2
 
-  for i in range(7):
-    wg = round(0.37 + i * 0.01, 2)
+  for i in range(1):
+    wg = round(0.8 + i * 0.01, 2)
 
     df = elr.update(wg, radius, angle)
     rf = elr.update(wg, radius, 20)
@@ -78,78 +95,13 @@ def dc(folder):
 
   return x2, y2
 
-import pbs
-
-def pbs_in(x, y, angle, dy):
-
-  core = elr.update(cfg.wg, cfg.radius, angle)
-
-  y1 = y + cfg.d2x2
-  y2 = y - cfg.d2x2
-
-  x1, _ = dxf.srect('core', x, y2, 20, cfg.wg)
-  x1, _ = dxf.taper('core', x1, y2, cfg.ltpr, cfg.wg, cfg.wtpr)
-  x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
-
-  pbs.tail(x1 - 5, y + cfg.d2x2, 90, 90, -1, 1)
-
-  x3, _ = dxf.taper('core', x2, y1, cfg.ltpr, cfg.wtpr, cfg.wg)
-  x3, _ = dxf.taper('core', x2, y2, cfg.ltpr, cfg.wtpr, cfg.wg)
-  x4, y3 = dxf.sbend('core', x3, y1, core, angle,  dy)
-  x4, y4 = dxf.sbend('core', x3, y2, core, angle, -dy)
-
-  x5, y3 = dxf.taper('core', x4, y3, cfg.ltpr, cfg.wg, cfg.wpbs)
-  x5, y4 = dxf.taper('core', x4, y4, cfg.ltpr, cfg.wg, cfg.wpbs)
-
-  x6, y3 = dxf.srect('core', x5, y3, 10, cfg.wpbs)
-  x6, y4 = dxf.srect('core', x5, y4, 10, cfg.wpbs)
-  
-  return x6, y
-  
-def pbs_out(x, y, angle, dy):
-
-  core = elr.update(cfg.wg, cfg.radius, angle)
-
-  y1 = y + cfg.d2x2
-  y2 = y - cfg.d2x2
-
-  x5, _ = dxf.sbend('core', x, y1 + dy, core, angle, -dy)
-  x5, _ = dxf.sbend('core', x, y2 - dy, core, angle,  dy)
-  x6, _ = dxf.taper('core', x5, y1, cfg.ltpr, cfg.wg, cfg.wtpr)
-  x6, _ = dxf.taper('core', x5, y2, cfg.ltpr, cfg.wg, cfg.wtpr)
-
-  x6, _ = dxf.srect('core', x6, y, cfg.l2x2, cfg.w2x2)
-
-  angle, dy = 2, 1
-  core = elr.update(cfg.wg, cfg.radius, angle)
-  x8, y3 = dxf.sbend('core', x6, y1, core, angle,  dy)
-  x8, y4 = dxf.sbend('core', x6, y2, core, angle, -dy)
-
-  x9, y3 = dxf.srect('core', x8, y3, 10, cfg.wg)
-  x9, y4 = dxf.srect('core', x8, y4, 10, cfg.wg)
-
-  return x9, y
-
-def pbs_mzi(folder):
-
-  cfg.draft = 'mask'
-
-  angle, dy = 2, 1
-
-  pbs_in(-10, 0, angle, dy)
-  dev.saveas(folder + 'mmi-in')
-
-  pbs_out(0, 0, angle, dy)
-  dev.saveas(folder + 'mmi-out')
-
 if __name__ == '__main__':
 
   cfg.draft = 'mask'
 
   # angle_45('D:/ansys/Euler/45')
   # angle_90('D:/ansys/Euler/90')
-  angle_180('D:/Git/mask/SiN-1.8/180-0.8w-' + str(cfg.radius) + 'R', cfg.wg)
+  # angle_180('D:/Git/mask/SiN-1.8/180-0.8w-' + str(cfg.radius) + 'R', cfg.wg)
   # angle_90x2('D:/ansys/Euler/90x2')
-  # sbend('D:/ansys/tap/')
-  # dc('D:/ansys/tap/')
-  # pbs_mzi('D:/ansys/PBS/')
+  # sbend_in_out('D:/ansys/tap/')
+  dc('D:/ansys/DC/')

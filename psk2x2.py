@@ -25,16 +25,17 @@ def shifter(x, y):
   y1 = y + cfg.d2x2
   y2 = y - cfg.d2x2
 
-  x1, _ = dxf.srect('core', x, y1, 50 - cfg.ltpr * 2, cfg.wg)
-  x1, _ = dxf.taper('core', x1, y1, cfg.ltpr, cfg.wg, cfg.wtpr)
+  x1, _ = dxf.taper('core', x, y1, cfg.ltpr, cfg.wg, cfg.wtpr)
   x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
+  x3, _ = dxf.taper('core', x2, y1, cfg.ltpr, cfg.wtpr, cfg.wg)
+  x3, _ = dxf.taper('core', x2, y2, cfg.ltpr, cfg.wtpr, cfg.wg)
 
   pbs.tail(x1 - 5, y2, 90, 90, 1, 1)
 
-  dxf.srect('edge', x, y, x2 - x, cfg.w2x2 + cfg.eg)
-  dxf.srect('sio2', x, y, x2 - x, cfg.w2x2 + cfg.sg)
+  dxf.srect('edge', x, y, x3 - x, cfg.w2x2 + cfg.eg)
+  dxf.srect('sio2', x, y, x3 - x, cfg.w2x2 + cfg.sg)
 
-  return x2, y1, y2
+  return x3, y1, y2
 
 def device(x, y):
 
@@ -45,7 +46,7 @@ def device(x, y):
   ch2x2 = cfg.ch - cfg.d2x2
 
   x1, _ = sbend(x, y1, 2, cfg.d2x2)
-  x2, _ = dev.sline(x, y2, x1 - x)
+  x2, _ = dev.sline(x, y2, x1 - x + cfg.l2x2 - cfg.l1x2)
   x1, y11, y12 = shifter(x1, y1)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
 
@@ -99,7 +100,7 @@ def chip(x, y, lchip):
 
   for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
-  s = 'iq-2x2-' + str(round(cfg.phase))
+  s = 'IQ-2x2'
   dev.texts(t1, y, s, 0.4, 'lc')
   dev.texts(t2, y, s, 0.4, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))

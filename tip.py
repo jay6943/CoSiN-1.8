@@ -6,15 +6,17 @@ polished = 200
 
 def device(x, y, ltip, wtip, sign):
   
-  w = [cfg.wg, wtip]
+  w = [cfg.wg, wtip + cfg.dw]
   l = [ltip, 100, 500]
   t = l[0] - sum(l[1:])
 
+  sch = cfg.sch - 10
+
   if t > 0: x, _ = dev.srect(x, y, t * sign, w[0])
   x1, _ = dxf.taper('core', x, y, sign * l[1], w[0], w[1])
-  x1, _ = dxf.taper('edge', x, y, sign * l[1], cfg.eg, cfg.sch)
+  x1, _ = dxf.taper('edge', x, y, sign * l[1], cfg.eg, sch)
   x3, _ = dxf.srect('core', x1, y, sign * l[2], w[1])
-  x3, _ = dxf.srect('edge', x1, y, sign * l[2], cfg.sch)
+  x3, _ = dxf.srect('edge', x1, y, sign * l[2], sch)
 
   dxf.srect('sio2', x, y, x3 - x, cfg.sg)
   
@@ -30,12 +32,14 @@ def diode(x, y, ltip, sign):
 
 def sline(x, y, lchip):
 
-  wtip = 0.36
+  wtip = 0.32 + cfg.dw
 
   x1, _ = device(x, y, 0, wtip, -1)
   x1, _ = device(x1, y, lchip - x1 + x, wtip, 1)
 
 def chip(x, y, lchip, wtip):
+
+  wtip = wtip + cfg.dw
 
   idev = len(cfg.data)
   x1, _ = dev.sline(x, y, 1000)
@@ -44,7 +48,7 @@ def chip(x, y, lchip, wtip):
   x4, t1 = device(x2, y, ltip, wtip, -1)
   x5, t2 = device(x3, y, ltip, wtip,  1)
 
-  s = 'tip-' + str(round(wtip, 2))
+  s = 'TIP-' + str(round(wtip - cfg.dw, 2))
   dev.texts(t1, y - 50, s, 0.4, 'lc')
   dev.texts(t2, y - 50, s, 0.4, 'rc')
   print(s, round(x3 - x2), round(x5 - x4))
@@ -53,8 +57,6 @@ def chip(x, y, lchip, wtip):
 
 def chips(x, y, arange):
 
-  y = y - cfg.sch
-  
   for w in arange: _, y = chip(x, y + cfg.sch, cfg.size, w)
 
   return x + cfg.size, y

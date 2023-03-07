@@ -35,43 +35,29 @@ def device(x, y):
 def chip(x, y, lchip):
 
   ch = cfg.ch * 0.5
+  dl = 2000 + (cfg.lvoa - 200) * 10
 
-  idev = len(cfg.data)
-  x1, _ = device(x, y)
-  x5, x6, ltip = dev.center(idev, x, x1, lchip)
+  x1, t1 = tip.fiber(x + dl, y, dl, -1)
+  x2, _ = device(x1 + dl, y)
+  x8, t2 = tip.fiber(x2, y, x + cfg.size - x2,  1)
 
-  x7, t1 = tip.fiber(x5, y, ltip, -1)
-  x8, t2 = tip.fiber(x6, y, ltip,  1)
-
-  s = 'voa-' + str(round(cfg.lvoa))
+  s = 'VOA-' + str(round(cfg.lvoa))
   dev.texts(t1, y + ch, s, 0.4, 'lc')
   dev.texts(t1, y - ch, s, 0.4, 'lc')
   dev.texts(t2, y + ch, s, 0.4, 'rc')
   dev.texts(t2, y - ch, s, 0.4, 'rc')
-  print(s, round(x6 - x5), round(x8 - x7))
+
+  print(s, round(x2 - x1), round(x8 - x))
 
   return x + lchip, y
 
 def chips(x, y, arange):
 
   var = cfg.lvoa
-
-  x2 = x
-  idev = len(cfg.data)
-  for cfg.lvoa in arange:
-    x1, _ = device(x2, y)
-    dev.texts((x2 + x1) * 0.5, y, str(int(cfg.lvoa)), 1, 'cc')
-    x2, y = dev.sline(x1, y, 600)
-  x3, x4, ltip = dev.center(idev, x, x2, cfg.size)
-
-  x5, _ = tip.fiber(x3, y, ltip, -1)
-  x6, _ = tip.fiber(x4, y, ltip, 1)
-
-  print('VOA', round(x4 - 3), round(x6 - x5))
-
+  for cfg.lvoa in arange: _, y = chip(x, y + cfg.ch * 2, cfg.size)
   cfg.lvoa = var
 
-  return x1, y
+  return x + cfg.size, y
 
 if __name__ == '__main__':
 

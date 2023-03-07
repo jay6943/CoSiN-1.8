@@ -91,21 +91,47 @@ def chip(x, y, lchip, radius, angle):
   x8, t2 = tip.fiber(x6, y2, ltip,  1)
   
   if angle > 3:
-    r = str(radius) + 'r-' + str(angle)
+    r = str(radius) + 'R-' + str(angle)
     dev.texts(t1, y - ch, r, 0.4, 'lc')
     dev.texts(t2, y - ch, r, 0.4, 'rc')
     print(r, round(x5 - x))
   else:
     a = (angle * 2 - 1) * 8000 + 2000
     b = (angle - 1) * 2 * 3.14 * 125
-    r = str(round(a + b))
+    r = 'L-' + str(round(a + b))
     dev.texts(t1, y  - ch, r, 0.4, 'lc')
     dev.texts(t2, y2 - ch, r, 0.4, 'rc')
     print(r, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y
 
+def sem(x, y, sign):
+
+  aligns = 'lc' if sign > 0 else 'rc'
+  x1 = 200 if sign > 0 else 300
+  y1 = y + 600
+  dev.srect(x, y1, 500, 1.2 + cfg.dw)
+  dev.srect(x, y1 - cfg.d2x2 * 2, 500, cfg.wpbs)
+  dev.texts(x + x1, y1 - cfg.sch * 0.5, 'pbs', 0.4, aligns)
+
+  y1 = y1 + 100
+  dev.srect(x, y1, 500, cfg.w2x2)
+  dev.texts(x + x1, y1 - cfg.sch * 0.5, '2x2', 0.4, aligns)
+
+  y1 = y1 + 100
+  dev.srect(x, y1, 500, cfg.wg)
+  dev.srect(x, y1 - cfg.d2x2 * 2, 500, cfg.wg)
+  dev.texts(x + x1, y1 - cfg.sch * 0.5, 'mmi-wg', 0.4, aligns)
+
+  y1 = y1 + 100
+  dev.srect(x, y1, 500, cfg.wg)
+  dev.srect(x, y1 - 1.8, 500, cfg.wg)
+  dev.texts(x + x1, y1 - cfg.sch * 0.5, 'dc', 0.4, aligns)
+
 def chips(x, y):
+
+  sem(x, y, 1)
+  sem(x + cfg.size - 500, y - 150, -1)
 
   _, y = chip(x, y, cfg.size, 0, 1)
   _, y = chip(x, y + cfg.sch, cfg.size, 0, 2)
@@ -115,9 +141,8 @@ def chips(x, y):
   _, y = chip(x, y + cfg.sch * 2, cfg.size, 75, 180)
   _, y = chip(x, y + cfg.sch * 3, cfg.size, 100, 180)
   
-  _, y = chip(x, y + cfg.sch * 3, cfg.size, 125, 180)
-  _, y = chip(x, y + cfg.sch * 4, cfg.size, 125, 90)
-  _, y = chip(x, y + cfg.sch * 4, cfg.size, 125, 45)
+  _, y = chip(x, y + cfg.sch * 4, cfg.size, cfg.radius, 90)
+  _, y = chip(x, y + cfg.sch * 4, cfg.size, cfg.radius, 45)
 
   return x + cfg.size, y
 

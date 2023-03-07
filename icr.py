@@ -56,23 +56,22 @@ def chip(x, y, lchip):
   x2, y4 = dev.sbend(x1, y2, 45, -ch * 2)
 
   ######################################################
-  x3, x20, y20 = tap.device(x2, y3)
+  x3, y21, y22 = tap.device(x2, y3)
+  x21, y21 = dev.sline(x3, y21, 300)
+  x23, y23 = dev.bends(x3, y22, 90, 0, 1, -1)
   idev = len(cfg.data)
-  x21, y21 = tip.diode(x20, y20, 4000 + y20 - y, 1)
-  dxf.move(idev, x20, y20, x21, y21, 0, 0, -90)
+  x24, y24 = tip.diode(x23, y23, 4000 + y23 - y, 1)
+  dxf.move(idev, x23, y23, x24, y24, 0, 0, -90)
   ######################################################
 
-  x4, _ = voa.device(x3, y3)
+  x4, _ = voa.device(x21, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
   x5, y5 = dev.sbend(x4, y3, 45, -ch * 2)
   x5, y6 = dev.sbend(x4, y4, 45,  ch * 2)
 
-  x6, _ = dev.sline(x5, y5, 500)
-  x6, _ = dev.sline(x5, y6, 500)
-
-  x7, y61, y62 = pbs.device(x6, y5)
-  x7, y63, y64 = pbs.device(x6, y6)
+  x7, y61, y62 = pbs.device(x5, y5)
+  x7, y63, y64 = pbs.device(x5, y6)
 
   x9, y71 = tbend(x7, y61,  ch * 2, 1)
   x8, y72 = tbend(x7, y62, -ch * 4, 1)
