@@ -32,7 +32,7 @@ def components(x, y):
   _, y1 = tip.chips(x, y1 + cfg.sch * 0.5, dev.arange(0.1, 0.3, 0.02))
   _, y1 = ssc.chips(x, y1 + cfg.sch, dev.arange(500, 900, 50))
   _, y1 = tap.chips(x, y1, dev.arange(31, 39, 2))
-  _, y1 = dci.chips(x, y1 - cfg.sch * 0.5, dev.arange(1.8, 2.6, 0.2))
+  _, y1 = dci.chips(x, y1 - cfg.sch * 0.5, dev.arange(1.4, 2.2, 0.2))
   _, y1 = tip.chip(x, y1 + cfg.sch * 1.5, cfg.size, 0.36)
   _, y1 = dev.sline(x, y1 + cfg.sch, cfg.size)
 
@@ -50,7 +50,7 @@ def optical_hybrid(x, y):
   _, y1 = tip.chip(x, y1 + cfg.sch * 5, cfg.size, 0.36)
   _, y1 = dev.sline(x, y1 + cfg.sch, cfg.size)
 
-  dxf.seperation('gold', 0, -cfg.mask)
+  dxf.seperation('gold', 0, -key.size)
 
 def polarization_splitter(x, y):
 
@@ -75,7 +75,7 @@ def align_key(x, y):
 
 if __name__ == '__main__':
 
-  cfg.draft = 'draft' # draft or mask
+  cfg.draft = 'mask' # draft or mask
 
   x = key.wbar + key.wkey
   y = key.wbar + key.wkey
@@ -84,9 +84,9 @@ if __name__ == '__main__':
 
   ok = 0
   
-  if ok == 0 or ok == 1: components(x - cfg.mask, y)
+  if ok == 0 or ok == 1: components(x - key.size, y)
   if ok == 0 or ok == 2: optical_hybrid(x, y)
-  if ok == 0 or ok == 3: polarization_splitter(x - cfg.mask, y - cfg.mask)
-  if ok == 0 or ok == 4: align_key(x, y - cfg.mask)
+  if ok == 0 or ok == 3: polarization_splitter(x - key.size, y - key.size)
+  if ok == 0 or ok == 4: align_key(x, y - key.size)
   
   dev.saveas(cfg.work + cfg.draft)

@@ -7,10 +7,11 @@ wbar = 250
 wkey = 400
 xorg = wbar + wkey
 yorg = wbar + wkey
+size = cfg.size + wkey + wbar * 2
 
 def cross(x, y):
 
-  lbar = cfg.mask - wbar
+  lbar = size - wbar
 
   data = ['cros']
 
@@ -32,7 +33,7 @@ def cross(x, y):
 
 def bars(x, y):
   
-  lkey = cfg.mask - wbar * 2
+  lkey = size - wbar * 2
 
   data = ['bars']
 
@@ -228,9 +229,9 @@ if __name__ == '__main__':
 
   cross(0, 0)
 
-  frame(x - cfg.mask, y, 1, 'fill')
+  frame(x - size, y, 1, 'fill')
   frame(x, y, 1, 'fill')
-  frame(x - cfg.mask, y - cfg.mask, 2, 'fill')
-  frame(x, y - cfg.mask, 3, 'fill')
+  frame(x - size, y - size, 2, 'fill')
+  frame(x, y - size, 3, 'fill')
 
   dev.saveas(cfg.work + 'key')

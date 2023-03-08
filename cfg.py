@@ -7,7 +7,7 @@ draft = 'draft'  # draft: 100, mask: 1000
 
 phase = 90
 
-dw = 0
+dw = 0.1
 wg = 0.8 + dw
 sg = 6 + dw
 eg = 40
@@ -31,5 +31,4 @@ spacing = 0.89 # x 2 times
 tapping = 2.6 + dw
 
 size = 10000
-mask = 10900
 area = [[0, 0], [-1, 0], [0, 0], [-1, -1], [0, -1]]
